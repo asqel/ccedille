@@ -1,0 +1,30 @@
+pointer addition:
+	int *ptr = 10;
+	ptr = ptr + 1
+	// ptr == 11 and not 10 + sizeof(int)
+pointer ++:
+	int *ptr = 10;
+	ptr++;
+	// ptr == 10 + sizeof(int) and not 11
+
+
+custom enums:
+	enum (N**2) powers_of_two{
+		zero, //0
+		one, // 1
+		two, // 2
+		four, // 4
+	};
+
+multi == :
+	a == b == c == d == ...
+	// a== b && b == c && c == d && ...
+
+
+triple comparison:
+	a < b < c
+	// a < b && b < c
+
+	a  > b > c
+	// a > b && b > c
+
