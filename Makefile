@@ -1,9 +1,9 @@
 # Compiler and linker settings
 CC = gcc
 AR = ar
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -g
 CFLAGS_COMP = $(CFLAGS) -Iinclude/compiler
-CFLAGS_CMD = $(CFLAGS)
+CFLAGS_CMD = $(CFLAGS) -Iinclude/compiler
 LD_FLAGS_COMP =
 LD_FLAGS_CMD =
 
@@ -22,7 +22,7 @@ COMP_LIB = libcdy.a
 all: $(NAME)
 
 $(NAME): $(OBJS_CMD) $(COMP_LIB)
-	$(CC) $(OBJS_CMD) -o $(NAME) $(LD_FLAGS_CMD)
+	$(CC) $(OBJS_CMD) $(COMP_LIB) -o $(NAME) $(LD_FLAGS_CMD)
 
 $(COMP_LIB): $(OBJS_COMP)
 	$(AR) -rcs $@ $^

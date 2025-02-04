@@ -21,6 +21,14 @@ static int get_syntax_token_type(char *c) {
 	return -1;
 }
 
+static int is_syntax(char c) {
+	for (int i = 0; tokens_syntax[i] != NULL; i++) {
+		if (tokens_syntax[i][0] == c)
+			return i;
+	}
+	return -1;
+}
+
 
 
 token_list_t *lexe(char *text) {
@@ -48,6 +56,29 @@ token_list_t *lexe(char *text) {
 			while (text[idx] != '\0' && text[idx] != '*' && text[idx + 1] != '/')
 				idx++;
 			idx += 2;
+		}
+		else if ('0' <= text[idx] && text[idx] <= '9') {
+			uint num_start = idx;
+			while ('0' <= text[idx] && text[idx] <= '9')
+				idx++;
+			if (text[idx] == '.') {
+				idx++;
+				while ('0' <= text[idx] && text[idx] <= '9')
+					idx++;
+			}
+			char *num = malloc(idx - num_start + 1);
+			if (num == NULL) {
+				token_list_free(res);
+				add_error(ERR_LEXE_OUT_OF_MEMORY);
+				return NULL;
+			}
+			memcpy(num, &text[num_start], idx - num_start);
+			num[idx - num_start] = '\0';
+			token_list_append(res, (token_t){TOKEN_DWORD_T, {.dw = atoi(num)}, line});
+		}
+		else if (is_syntax(text[idx]) != -1) {
+			token_list_append(res, (token_t){.line = line, .type = TOKEN_SYNTAX_T, .val = {.syntax = is_syntax(text[idx])}});
+			idx++;
 		}
 		else if (text[idx] == '"') {
 			idx++;
@@ -100,8 +131,29 @@ token_list_t *lexe(char *text) {
 			else
 				idx += 3;
 		}
-		else
-			idx++;
+		else {
+			// check if it is an identifier (starts with non digit and contain no syntax characters)
+			if ((text[idx] >= 'a' && text[idx] <= 'z') || (text[idx] >= 'A' && text[idx] <= 'Z')) {
+				uint id_start = idx;
+				while ((text[idx] >= 'a' && text[idx] <= 'z') || (text[idx] >= 'A' && text[idx] <= 'Z') || (text[idx] >= '0' && text[idx] <= '9'))
+					idx++;
+				char *id = malloc(idx - id_start + 1);
+				if (id == NULL) {
+					token_list_free(res);
+					add_error(ERR_LEXE_OUT_OF_MEMORY);
+					return NULL;
+				}
+				memcpy(id, &text[id_start], idx - id_start);
+				id[idx - id_start] = '\0';
+				token_list_append(res, (token_t){TOKEN_IDENTIFIER_T, {.id = id}, line});
+			}
+			else {
+				printf("idx = %d %d %c%c%c\n", idx, line, text[idx], text[idx + 1], text[idx + 2]);
+				add_error(ERR_LEXE_UNEXPECTED_TOKEN);
+				token_list_free(res);
+				return NULL;
+			}
+		}
 	}
 	// add token_none at the end of res
 	token_list_append(res, (token_t){TOKEN_NONE_T, {0}, line});

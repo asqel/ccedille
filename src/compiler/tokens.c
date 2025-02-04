@@ -5,7 +5,7 @@
 #include "tokens.h"
 
 
-char *tokens_syntax[] = {"#", "@", ",", "?", ":", "(", ")", "[", "]", "{", "}", NULL};
+char *tokens_syntax[] = {"#", "@", ",", "?", ":", "(", ")", "[", "]", "{", "}", ";", NULL};
 char *tokens_op1[] = {"+", "-", "/", "*", "=", "<", ">", "!", "&", "|", "~", "^", "%", ".", NULL};
 char *tokens_op2[] = {"+=", "-=", "*=", "/=", "&=", "|=", "^=", "%=", "~~", "==", "!=", "<=", ">=", "++", "--", "->", ">>", "<<", NULL};
 char *tokens_op3[] = {"~~=",  "<<=", ">>=", NULL};
@@ -63,22 +63,28 @@ u32 token_op_str_to_enum(char *str) {
 void token_print(token_t tok) {
 	switch (tok.type) {
 		case TOKEN_STR_T:
-			printf("T_STR[%s]\n", tok.val.str);
+			printf("T_STR[%s]", tok.val.str);
 			break;
 		case TOKEN_IDENTIFIER_T:
-			printf("T_ID%s]\n", tok.val.id);
+			printf("T_ID[%s]", tok.val.id);
 			break;
 		case TOKEN_OPERATOR_T:
 			if (tok.val.op < tokens_op1_len)
-				printf("T_OP1[%s]\n", tokens_op1[tok.val.op]);
+				printf("T_OP1[%s]", tokens_op1[tok.val.op]);
 			else if (tok.val.op < tokens_op1_len + tokens_op2_len)
-				printf("T_OP2[%s]\n", tokens_op2[tok.val.op - tokens_op1_len]);
+				printf("T_OP2[%s]", tokens_op2[tok.val.op - tokens_op1_len]);
 			else if (tok.val.op < tokens_op1_len + tokens_op2_len + tokens_op3_len)
-				printf("T_OP3[%s]\n", tokens_op3[tok.val.op - tokens_op1_len - tokens_op2_len]);
+				printf("T_OP3[%s]", tokens_op3[tok.val.op - tokens_op1_len - tokens_op2_len]);
 			else
-				printf("T_OP_NONE]\n");
+				printf("T_OP_[NONE]");
+			break;
+		case TOKEN_SYNTAX_T:
+			printf("T_SYNTAX['%s']", tokens_syntax[tok.val.syntax]);
+			break;
+		case TOKEN_DWORD_T:
+			printf("T_DWORD[%d]", tok.val.dw);
 			break;
 		default:
-			printf("T_%d]\n", tok.type);
+			printf("T_[%d]", tok.type);
 	}
 }
