@@ -34,18 +34,23 @@ static int is_syntax(char c) {
 token_list_t *lexe(char *text) {
 	uint idx = 0;
 	int line = 1;
+
 	token_list_t *res = new_token_list();
 	if (res == NULL) {
 		add_error(ERR_LEXE_OUT_OF_MEMORY);
 		return NULL;
 	}
+
 	while (text[idx] != '\0') {
 		if (text[idx] == '\n') {
 			line++;
 			idx++;
+			continue;
 		}
-		else if (is_lexer_skip(text[idx]))
+		if (is_lexer_skip(text[idx])) {
 			idx++;
+			continue;
+		}
 		else if (text[idx] == '/' && text[idx + 1] == '/') {
 			idx += 2;
 			while (text[idx] != '\n' && text[idx] != '\0')
