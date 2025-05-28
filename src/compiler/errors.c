@@ -1,5 +1,5 @@
-#include "types.h"
-#include "errors.h"
+#include "compiler/types.h"
+#include "compiler/errors.h"
 
 
 

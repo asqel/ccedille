@@ -1,8 +1,8 @@
-#include "tokens.h"
+#include "compiler/tokens.h"
 #include <stdlib.h>
 #include <string.h>
 #include <string.h>
-#include "errors.h"
+#include "compiler/errors.h"
 
 static int is_lexer_skip(char c) {
 	if (c == '\r' || c == '\v'  || c == '\t')
@@ -74,7 +74,8 @@ token_list_t *lexe(char *text) {
 			}
 			memcpy(num, &text[num_start], idx - num_start);
 			num[idx - num_start] = '\0';
-			token_list_append(res, (token_t){TOKEN_DWORD_T, {.dw = atoi(num)}, line});
+			token_list_append(res, (token_t){TOKEN_INT_T, {.i = atoi(num)}, line});
+			free(num);
 		}
 		else if (is_syntax(text[idx]) != -1) {
 			token_list_append(res, (token_t){.line = line, .type = TOKEN_SYNTAX_T, .val = {.syntax = is_syntax(text[idx])}});

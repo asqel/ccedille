@@ -9,12 +9,11 @@ typedef struct {
 	union {
 		char *str;
 		char *id;
-		u8 c;
-		u16 w;
-		u32 dw;
-		u64 l;
-		u32 syntax;
+		i64 i;
+		double f;
 		u32 op;
+		u32 syntax;
+		u32 keyword;
 	} val;
 	int line;
 } token_t;
@@ -31,7 +30,7 @@ enum TOKEN_TYPES {
 	TOKEN_IDENTIFIER_T,
 	TOKEN_CHAR_T,
 	TOKEN_WORD_T,
-	TOKEN_DWORD_T,
+	TOKEN_INT_T,
 	TOKEN_LONG_T,
 	TOKEN_SYNTAX_T,
 	TOKEN_OPERATOR_T
@@ -92,5 +91,6 @@ token_list_t *lexe(char *text);
 void token_print(token_t tok);
 void token_free(token_t tok);
 void token_list_free(token_list_t *lst);
+void token_list_append(token_list_t *lst, token_t tok);
 
 #endif

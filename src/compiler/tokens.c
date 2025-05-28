@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "tokens.h"
+#include "compiler/tokens.h"
 
 
 char *tokens_syntax[] = {"#", "@", ",", "?", ":", "(", ")", "[", "]", "{", "}", ";", NULL};
@@ -11,9 +11,9 @@ char *tokens_op2[] = {"+=", "-=", "*=", "/=", "&=", "|=", "^=", "%=", "~~", "=="
 char *tokens_op3[] = {"~~=",  "<<=", ">>=", NULL};
 
 void token_list_append(token_list_t *lst, token_t tok) {
+	lst->tokens = realloc(lst->tokens, sizeof(token_t) * (lst->len + 1));
+	lst->tokens[lst->len] = tok;
 	lst->len++;
-	lst->tokens = realloc(lst->tokens, sizeof(token_t) * lst->len);
-	lst->tokens[lst->len - 1] = tok;
 }
 
 token_list_t *new_token_list() {
@@ -40,6 +40,7 @@ void token_list_free(token_list_t *lst) {
 	for (int i = 0; i < lst->len; i++) {
 		token_free(lst->tokens[i]);
 	}
+	free(lst->tokens);
 	free(lst);
 }
 
@@ -81,8 +82,8 @@ void token_print(token_t tok) {
 		case TOKEN_SYNTAX_T:
 			printf("T_SYNTAX['%s']", tokens_syntax[tok.val.syntax]);
 			break;
-		case TOKEN_DWORD_T:
-			printf("T_DWORD[%d]", tok.val.dw);
+		case TOKEN_INT_T:
+			printf("T_DWORD[%d]", tok.val.i);
 			break;
 		default:
 			printf("T_[%d]", tok.type);

@@ -2,16 +2,16 @@
 CC = gcc
 AR = ar
 CFLAGS = -Wall -Wextra -g
-CFLAGS_COMP = $(CFLAGS) -Iinclude/compiler
-CFLAGS_CMD = $(CFLAGS) -Iinclude/compiler
+CFLAGS_COMP = $(CFLAGS) -Iinclude
+CFLAGS_CMD = $(CFLAGS) -Iinclude
 LD_FLAGS_COMP =
 LD_FLAGS_CMD =
 
 # Sources and objects
-SRCS_COMP = $(wildcard src/compiler/*.c src/compiler/*/*.c)
+SRCS_COMP = $(wildcard src/compiler/*.c src/compiler/*/*.c) $(wildcard src/utils/*.c src/utils/*/*.c)
 OBJS_COMP = $(SRCS_COMP:.c=.o)
 
-SRCS_CMD = $(wildcard src/cmd/*.c src/cmd/*/*.c)
+SRCS_CMD = $(wildcard src/cmd/*.c src/cmd/*/*.c) $(wildcard src/utils/*.c src/utils/*/*.c)
 OBJS_CMD = $(SRCS_CMD:.c=.o)
 
 # Output names
@@ -37,5 +37,7 @@ src/compiler/%.o: src/compiler/%.c
 # Cleaning rules
 clean:
 	rm -f $(OBJS_COMP) $(OBJS_CMD) $(COMP_LIB) $(NAME)
+
+re: clean all
 
 .PHONY: all clean
