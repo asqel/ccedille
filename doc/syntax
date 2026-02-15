@@ -4,3 +4,58 @@ GLOBAL SCOPE:
 	ENUM,
 	(EXTERN) VARDECL,
 	
+
+TOKENS:
+	OP: [+ - * / ++ -- ^ & | && || == != < > <= >= [ ] ( ) ~ ! % . = += -= *= /= &= |= ^= ~~ sizeof()]
+	syntax: [: ; , ? { }]
+	keyword: [if else for while do switch case static
+				goto return break continue struct union enum]
+	default types: [int char i8 u8 i16 u16 i32 u32 i64 u64 double float]
+	preproc: [define ifdef else elif if defined include endif]
+	parser-keyword: [@end]
+	values: [string, (integers...) (floats...)]
+
+comment:
+	//...  single line comment (\ ignored)
+	/*...*/ multi line comment 
+
+string:
+	"..." 
+	escape sequence:
+		\r \n \e \t \f \v \a \b \\ \0 \x?? \" \'
+	
+	r"..." (no escape sequence)
+	ex:
+		r"\a\b" -> "\\a\\b"
+		
+	`...` (multi line string) (\n auto inserted)
+	ex:
+		`
+		This is a Multi line string
+		each line must start at the same indentation as
+		the starting \`
+		the first and last line must remain empty
+		`
+	
+	r`...` (multi line string no escape sequence)
+	c`...` (multi line string CRLF (\r\n))
+
+character:
+	'?'
+	escape sequence:
+		same as string
+
+integer:
+	[0-9]+
+	0x[0-9A-fa-f]+
+	0X[0-9A-fa-f]+
+	0o[0-7]+
+
+	+suffix:
+		L -> i64
+		U -> u64
+		u -> u32
+		default -> i32
+
+floating point:
+	(-)?[0-9]+(.[0-9])?

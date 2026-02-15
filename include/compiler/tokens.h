@@ -24,16 +24,10 @@ typedef struct {
 } token_list_t;
 
 
-enum TOKEN_TYPES {
-	TOKEN_NONE_T,
-	TOKEN_STR_T,
-	TOKEN_IDENTIFIER_T,
-	TOKEN_CHAR_T,
-	TOKEN_WORD_T,
-	TOKEN_INT_T,
-	TOKEN_LONG_T,
-	TOKEN_SYNTAX_T,
-	TOKEN_OPERATOR_T
+enum {
+	TOKEN_NONE,
+	TOKEN_OP,
+	TOKEN_SYNTAX,
 };
 
 extern char *tokens_syntax[];
