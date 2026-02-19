@@ -6,23 +6,31 @@ GLOBAL SCOPE:
 	
 
 TOKENS:
-	OP: [+ - * / ++ -- ^ & | && || == != < > <= >= [ ] ( ) ~ ! % . = += -= *= /= &= |= ^= ~~ sizeof()]
+	OP: [+ - * / ++ -- ^ & | && || == != < > <= >= [ ] ( ) ~ ! % . = += -= *= /= &= |= ^= sizeof ->]
 	syntax: [: ; , ? { }]
-	keyword: [if else for while do switch case static
-				goto return break continue struct union enum]
+	keyword: [if else for while do switch case static extern typedef
+				goto return break continue struct union enum defined]
 	default types: [int char i8 u8 i16 u16 i32 u32 i64 u64 double float]
-	preproc: [define ifdef else elif if defined include endif]
+	preproc: [define ifdef else elif if include endif]
 	parser-keyword: [@end]
 	values: [string, (integers...) (floats...)]
+	identifier: [a-zA-Z_]+[a-zA-Z_0-9]*
+
+types:
+	i8 = 8 bit signed integer
+	u8 = 8 bit unsigned integer
+	...
+	int = i32
+	char = i8
 
 comment:
 	//...  single line comment (\ ignored)
-	/*...*/ multi line comment 
+	/*...*/ multi line comment (\ ignored)
 
 string:
 	"..." 
 	escape sequence:
-		\r \n \e \t \f \v \a \b \\ \0 \x?? \" \'
+		\r \n \e \t \f \v \a \b \\ \0 \x?? \" \' \u \U
 	
 	r"..." (no escape sequence)
 	ex:

@@ -2,6 +2,7 @@ pointer addition:
 	int *ptr = 10;
 	ptr = ptr + 1
 	// ptr == 11 and not 10 + sizeof(int)
+	// same for ptr += 1
 pointer ++:
 	int *ptr = 10;
 	ptr++;
@@ -28,3 +29,33 @@ triple comparison:
 	a  > b > c
 	// a > b && b > c
 
+self bitwise not:
+	a~~
+	// stop it with ++a nobody likes you
+
+define functon in struct:
+	struct vec2 {
+		int x;
+		int y;
+		#print(self) (printf("%d %d", self.x, self.y))
+	}
+
+
+if (i ||= {1, 2, 3}) {
+}
+
+struct vec2_t {
+	int x;
+	int y;
+
+	@getx(self) (self.x)
+	@incx(self) (self.x++)
+	@add(self, other) (self.x += other.x, self.y += other.y)
+};
+
+vec2_t a = {0, 2};
+vec2_t b = {3, 4};
+vec3_t c = {5, 6, 1};
+
+a.add(b);
+a.add(c);

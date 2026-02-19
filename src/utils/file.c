@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 char *uti_read_file(char *path) {
 	FILE *f = fopen(path, "r");

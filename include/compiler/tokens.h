@@ -1,26 +1,29 @@
 #ifndef TOKENS_H
 #define TOKENS_H
 
-#include "types.h"
 #include <stdlib.h>
+#include <stdint.h>
+#include <setjmp.h>
 
 typedef struct {
-	u8 type;
+	uint8_t type;
 	union {
-		char *str;
+		uint8_t op;
+		char syntax;
+		uint32_t keyword;
+		int64_t s_int;
+		uint64_t u_int;
+		char *string;
 		char *id;
-		i64 i;
 		double f;
-		u32 op;
-		u32 syntax;
-		u32 keyword;
+		char *parser_keyword;
 	} val;
 	int line;
 } token_t;
 
 typedef struct {
 	token_t *tokens;
-	uint len;
+	size_t len;
 } token_list_t;
 
 
@@ -28,15 +31,59 @@ enum {
 	TOKEN_NONE,
 	TOKEN_OP,
 	TOKEN_SYNTAX,
+	TOKEN_KEYWORD,
+	TOKEN_PARSER_KW,
+	TOKEN_I64,
+	TOKEN_U64,
+	TOKEN_I32,
+	TOKEN_U32,
+	TOKEN_U16,
+	TOKEN_I16,
+	TOKEN_U8,
+	TOKEN_I8,
+	TOKEN_STRING,
+	TOKEN_ID,
+	TOKEN_DOUBLE,
+	TOKEN_FLOAT
 };
 
-extern char *tokens_syntax[];
-extern char *tokens_op1[];
-extern char *tokens_op2[];
-extern char *tokens_op3[];
-#define tokens_op1_len 14
-#define tokens_op2_len 18
-#define tokens_op3_len 3
+enum {
+	TOKEN_OP_PLUS = '+',
+	TOKEN_OP_MINUS = '-',
+	TOKEN_OP_MUL = '*',
+	TOKEN_OP_DIV = '/',
+	TOKEN_OP_BXOR = '^',
+	TOKEN_OP_BAND = '&',
+	TOKEN_OP_BOR = '|',
+	TOKEN_OP_LESS = '<',
+	TOKEN_OP_GREATER = '<',
+	TOKEN_OP_LBRACK = '[',
+	TOKEN_OP_RBRACK = ']',
+	TOKEN_OP_LPAR = '(',
+	TOKEN_OP_RPAR = ')',
+	TOKEN_OP_BNOT = '~',
+	TOKEN_OP_NOT = '!',
+	TOKEN_OP_MOD = '%',
+	TOKEN_OP_DOT = '.',
+	TOKEN_OP_ASSIGN = '=',
+	TOKEN_OP_INC = 130,
+	TOKEN_OP_DEC,
+	TOKEN_OP_AND,
+	TOKEN_OP_OR,
+	TOKEN_OP_EQ,
+	TOKEN_OP_NEQ,
+	TOKEN_OP_LEQ,
+	TOKEN_OP_GEQ,
+	TOKEN_OP_PLUS_ASSIGN,
+	TOKEN_OP_MINUS_ASSIGN,
+	TOKEN_OP_MUL_ASSIGN,
+	TOKEN_OP_DIV_ASSIGN,
+	TOKEN_OP_BAND_ASSIGN,
+	TOKEN_OP_BOR_ASSIGN,
+	TOKEN_OP_BXOR_ASSIGN,
+	TOKEN_OP_SIZEOF,
+	TOKEN_OP_ARROW,
+};
 
 enum {
 	TOKEN_OP_PLUS_T,
@@ -77,14 +124,45 @@ enum {
 	TOKEN_OP_NONE_T
 };
 
-u32 token_op_str_to_enum(char *str);
-void token_list_append(token_list_t *lst, token_t tok);
-token_list_t *new_token_list();
+enum {
+	TOKEN_KW_IF,
+	TOKEN_KW_ELSE,
+	TOKEN_KW_FOR,
+	TOKEN_KW_WHILE,
+	TOKEN_KW_DO,
+	TOKEN_KW_SWITCH,
+	TOKEN_KW_CASE,
+	TOKEN_KW_STATIC, 
+	TOKEN_KW_EXTERN,
+	TOKEN_KW_TYPEDEF,
+	TOKEN_KW_GOTO,
+	TOKEN_KW_RETURN,
+	TOKEN_KW_BREAK,
+	TOKEN_KW_CONTINUE,
+	TOKEN_KW_STRUCT,
+	TOKEN_KW_UNION,
+	TOKEN_KW_ENUM,
+	TOKEN_KW_DEFINED,
+};
 
-token_list_t *lexe(char *text);
-void token_print(token_t tok);
-void token_free(token_t tok);
-void token_list_free(token_list_t *lst);
-void token_list_append(token_list_t *lst, token_t tok);
+enum {
+	TOKEN_PRE_DEFINE,
+	TOKEN_PRE_IFDEF,
+	TOKEN_PRE_ELSE,
+	TOKEN_PRE_ELIF,
+	TOKEN_PRE_IF,
+	TOKEN_PRE_INCLUDE,
+	TOKEN_PRE_ENDIF,
+};
+
+typedef struct {
+	token_list_t lst;
+	int error;
+	jmp_buf jmp_buffer;
+} lexer_ctx_t;
+
+void token_list_append(lexer_ctx_t *ctx, token_t tok);
+
+void lexe(lexer_ctx_t *ctx, char *text);
 
 #endif
