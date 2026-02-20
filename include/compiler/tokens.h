@@ -156,13 +156,13 @@ enum {
 };
 
 typedef struct {
-	token_list_t lst;
+	token_list_t *lst;
 	int error;
 	jmp_buf jmp_buffer;
 } lexer_ctx_t;
 
 void token_list_append(lexer_ctx_t *ctx, token_t tok);
 
-void lexe(lexer_ctx_t *ctx, char *text);
+int lexe(token_list_t *lst, char *text);
 
 #endif
